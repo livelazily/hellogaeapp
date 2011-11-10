@@ -16,4 +16,4 @@ class MainPage(webapp2.RequestHandler):
             self.redirect(users.create_login_url(self.request.uri))
 
 
-app = webapp2.WSGIApplication([('/', MainPage)], debug=True)
+app = webapp2.WSGIApplication([('/webapp2', MainPage)], debug=True)

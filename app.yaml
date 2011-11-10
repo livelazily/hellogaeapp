@@ -5,5 +5,13 @@ api_version: 1
 threadsafe: true
 
 handlers:
-- url: /.*
+- url: /webapp2
   script: helloworld.app
+  secure: always
+- url: /.*
+  script: helloflask.app
+  secure: always
+
+libraries:
+- name: jinja2
+  version: "2.6"
