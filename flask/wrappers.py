@@ -14,7 +14,7 @@ from werkzeug.utils import cached_property
 
 from .exceptions import JSONBadRequest
 from .debughelpers import attach_enctype_error_multidict
-from . import json
+from .helpers import json, _assert_have_json
 from .globals import _request_ctx_stack
 
 
@@ -95,6 +95,8 @@ class Request(RequestBase):
 
         This requires Python 2.6 or an installed version of simplejson.
         """
+        if __debug__:
+            _assert_have_json()
         if self.mimetype == 'application/json':
             request_charset = self.mimetype_params.get('charset')
             try:
@@ -106,7 +108,7 @@ class Request(RequestBase):
 
     def on_json_loading_failed(self, e):
         """Called if decoding of the JSON data failed.  The return value of
-        this method is used by :attr:`json` when an error occurred.  The default
+        this method is used by :attr:`json` when an error ocurred.  The default
         implementation raises a :class:`JSONBadRequest`, which is a subclass of
         :class:`~werkzeug.exceptions.BadRequest` which sets the
         ``Content-Type`` to ``application/json`` and provides a JSON-formatted

@@ -9,7 +9,7 @@
     :license: BSD, see LICENSE for more details.
 """
 from werkzeug.exceptions import HTTPException, BadRequest
-from . import json
+from .helpers import json
 
 
 class JSONHTTPException(HTTPException):
@@ -39,6 +39,7 @@ class JSONHTTPException(HTTPException):
 class JSONBadRequest(JSONHTTPException, BadRequest):
     """Represents an HTTP ``400 Bad Request`` error whose body contains an
     error message in JSON format instead of HTML format (as in the superclass).
+
     """
 
     #: The description of the error which occurred as a string.

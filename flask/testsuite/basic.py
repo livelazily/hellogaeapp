@@ -13,7 +13,6 @@ from __future__ import with_statement
 
 import re
 import flask
-import pickle
 import unittest
 from datetime import datetime
 from threading import Thread
@@ -298,31 +297,6 @@ class BasicFunctionalityTestCase(FlaskTestCase):
         self.assert_equal(c.get('/').data, 'None')
         self.assert_equal(c.get('/').data, '42')
 
-    def test_session_special_types(self):
-        app = flask.Flask(__name__)
-        app.secret_key = 'development-key'
-        app.testing = True
-        now = datetime.utcnow().replace(microsecond=0)
-
-        @app.after_request
-        def modify_session(response):
-            flask.session['m'] = flask.Markup('Hello!')
-            flask.session['dt'] = now
-            flask.session['t'] = (1, 2, 3)
-            return response
-
-        @app.route('/')
-        def dump_session_contents():
-            return pickle.dumps(dict(flask.session))
-
-        c = app.test_client()
-        c.get('/')
-        rv = pickle.loads(c.get('/').data)
-        self.assert_equal(rv['m'], flask.Markup('Hello!'))
-        self.assert_equal(type(rv['m']), flask.Markup)
-        self.assert_equal(rv['dt'], now)
-        self.assert_equal(rv['t'], (1, 2, 3))
-
     def test_flashes(self):
         app = flask.Flask(__name__)
         app.secret_key = 'testkey'
@@ -387,7 +361,7 @@ class BasicFunctionalityTestCase(FlaskTestCase):
             return ''
 
         @app.route('/test_filters_without_returning_categories/')
-        def test_filters2():
+        def test_filters():
             messages = flask.get_flashed_messages(category_filter=['message', 'warning'])
             self.assert_equal(len(messages), 2)
             self.assert_equal(messages[0], u'Hello World')
