@@ -11,6 +11,7 @@ handlers:
 - url: /.*
   script: helloflask.app
   secure: always
+- static_dir: static
 
 libraries:
 - name: jinja2
