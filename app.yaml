@@ -2,13 +2,18 @@ application: hellogaeapp
 version: 1
 runtime: python27
 api_version: 1
-threadsafe: true
+threadsafe: no
 
 handlers:
 - url: /static
   static_dir: static
 - url: /webapp2
   script: helloworld.app
+
+- url: /tasks/checkapp
+  script: cron/checkupdate.py
+  login: admin
+
 - url: /.*
   script: helloflask.app
 
