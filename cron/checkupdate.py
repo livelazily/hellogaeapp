@@ -52,10 +52,10 @@ def sendEmail(name, link):
 def checkUpdate():
     file_name, detial_url = getLastFile()
     if file_name:
-        query = db.GqlQuery('SELECT * FROM GAEProxy WHERE name = :1', file_name)
+        data = getDetialData(detial_url)
+        query = db.GqlQuery('SELECT * FROM GAEProxy WHERE name = :1 and sha1 = :2', file_name, data.get('sha1'))
         old_gae = query.get()
         if not old_gae:
-            data = getDetialData(detial_url)
             new_gae = GAEProxy(name=file_name, **data)
             key = new_gae.put()
             sendEmail(file_name, data['url'])
@@ -72,7 +72,7 @@ def main():
     logging.getLogger().setLevel(logging.DEBUG)
     try:
         checkUpdate()
-    except Exception,e:
+    except Exception, e:
         logging.exception(e)
         print("check new version of GAEProxy faild!")
 
