@@ -34,7 +34,7 @@ def getDetialData(url):
         file_link = db.Link(urljoin(url, file_link))
         sha1 = rows[2].find('td').text
         desc = rows[1].find('td/pre').text
-        return {'url': file_link, 'sha1': sha1, 'desc': desc, 'date': datetime.now()}
+        return {'url': file_link, 'sha1': sha1, 'desc': desc}
     except Exception as e:
         logging.exception(e)
         raise
