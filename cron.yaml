@@ -1,0 +1,4 @@
+cron:
+- description: check new app
+  url: /tasks/checkapp
+  schedule: every 1 minutes
