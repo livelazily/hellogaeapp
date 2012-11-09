@@ -1,10 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="static/js/jquery-1.7.1.js"></script>
-    <title></title>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-1.8.2.js') }}"></script>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap/bootstrap.css')}}">
+  <title></title>
 </head>
 <body>
+<div id="content">
+  <table id="taskTable">
 
+  </table>
+</div>
 </body>
 </html>

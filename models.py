@@ -9,3 +9,7 @@ class GAEProxy(db.Model):
     sha1 = db.StringProperty()
     url = db.LinkProperty()
     desc = db.StringProperty(multiline=True)
+
+class Task(db.Model):
+    name = db.StringProperty(required=True)
+    url = db.LinkProperty(required=True)
