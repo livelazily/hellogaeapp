@@ -40,12 +40,14 @@ def getDetialData(url):
         raise
 
 
-def sendEmail(name, link):
+def sendEmail(name, data):
     message = mail.EmailMessage()
     message.sender = 'livelazily <livelazily@gmail.com>'
     message.to = 'livelazily@gmail.com'
     message.subject = u'GAEProxy 有新的版本 %s' % name
-    message.body = u'GAEProxy 有新的版本 %s 可以下载了\n下载地址为 %s' % (name, link)
+    message.body = u'''GAEProxy 有新的版本 %s 可以下载了
+更新内容: %s
+下载地址为: %s''' % (name, data.get('desc'),data.get('url'))
     message.send()
 
 
@@ -58,7 +60,7 @@ def checkUpdate():
         if not old_gae:
             new_gae = GAEProxy(name=file_name, **data)
             key = new_gae.put()
-            sendEmail(file_name, data['url'])
+            sendEmail(file_name, data)
             print('new gae file key is %s' % str(key.id_or_name()))
         else:
             key = old_gae.key()
