@@ -14,9 +14,6 @@ from google.appengine.ext import db
 from google.appengine.api import mail
 from google.appengine.api.urlfetch import fetch
 
-task = Task(key_name="gaeproxy")
-task.put()
-
 class CheckGoogleCodeProjectUpdate(View):
     def dispatch_request(self):
         file_msgs = []
