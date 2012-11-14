@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from flask import render_template
+from flask import render_template, render_template_string
 
 __author__ = 'livelazily'
 
@@ -9,23 +9,31 @@ from flask.views import View
 from urlparse import urljoin
 
 from lxml import etree
-from models import GAEProxy
+from models import ProjectFile, Task
 from google.appengine.ext import db
 from google.appengine.api import mail
 from google.appengine.api.urlfetch import fetch
 
+task = Task(key_name="gaeproxy")
+task.put()
+
 class CheckGoogleCodeProjectUpdate(View):
     def dispatch_request(self):
+        file_msgs = []
         try:
-            quert = db.GqlQuery('SELECT * FROM Task ORDER BY name')
-            quert = quert.fetch(10)
-            for task in quert:
-                project_name = task.name
-                self._checkUpdate(project_name)
+            query = db.GqlQuery('SELECT __key__ FROM Task')
+            query = query.fetch(10)
+
+            for key in query:
+                project_name = key.name()
+                file_msgs.append(self._checkUpdate(project_name))
+            if len(query) < 1:
+                file_msgs.append("Task not found!")
         except Exception, e:
             logging.exception(e)
-            return "check update faild!"
-        return "Task not found!"
+            return render_template_string('<div>Check update faild!</div>')
+        return render_template('taskresult.html', file_msgs=file_msgs)
+
 
 
     def _getLastFile(self, project_name):
@@ -49,7 +57,7 @@ class CheckGoogleCodeProjectUpdate(View):
 
             file_link = rows[0].find('td/div/div[4]/a[1]').get('href')
             file_link = db.Link(urljoin(url, file_link))
-            sha1 = rows[2].find('td').text
+            sha1 = rows[2].find('td/span').text
             desc = rows[1].find('td/pre').text
             return {'url': file_link, 'sha1': sha1.strip(), 'desc': desc}
         except Exception as e:
@@ -57,33 +65,45 @@ class CheckGoogleCodeProjectUpdate(View):
             raise
 
 
-    def _sendEmail(self, project_name, file_name, link):
+    def _sendEmail(self, project_name, file_name, data):
         message = mail.EmailMessage()
         message.sender = 'livelazily <livelazily@gmail.com>'
         message.to = 'livelazily@gmail.com'
         message.subject = u'%s 有新的版本 %s' % (project_name, file_name)
-        message.body = u'%s 有新的版本 %s 可以下载了\n下载地址为 %s' % (project_name, file_name, link)
+        message.body = u'''%s 有新的版本 %s 可以下载了
+更新内容: %s
+下载地址为: %s''' % (project_name,file_name, data.get('desc'),data.get('url'))
+
         message.send()
 
 
     def _checkUpdate(self, project_name):
         file_name, detial_url = self._getLastFile(project_name)
+        file_msg = []
         if file_name:
             data = self._getDetialData(detial_url)
-            query = db.GqlQuery('SELECT * FROM GAEProxy WHERE name = :1 and sha1 = :2', file_name, data.get('sha1'))
-            old_gae = query.get()
-            if not old_gae:
-                new_gae = GAEProxy(name=file_name, **data)
-                key = new_gae.put()
-                self._sendEmail(file_name, data['url'])
-                print('new gae file key is %s' % str(key.id_or_name()))
+            query = db.GqlQuery('SELECT * FROM ProjectFile WHERE name = :1 and sha1 = :2', file_name, data.get('sha1'))
+            old_file = query.get()
+            if not old_file:
+                new_file = ProjectFile(name=file_name, **data)
+                key = new_file.put()
+                self._sendEmail(project_name, file_name, data)
+                file_msg.append('new gae file key is %s' % str(key.id_or_name()))
             else:
-                key = old_gae.key()
-                print('old gae file key is %s' % str(key.id_or_name()))
-        print('<br> %s' % file_name)
+                key = old_file.key()
+                file_msg.append('old gae file key is %s' % str(key.id_or_name()))
+        file_msg.append('<br> %s' % file_name)
+        return "".join(file_msg)
 
 
 class ShowTaskList(View):
+    def getTaskList(self):
+        """"""
+        query = db.GqlQuery('SELECT __key__ FROM Task')
+        query = query.fetch(10)
+        for key in query:
+            name = key.name()
+
     def get_template_name(self):
         return 'index.html'
 
