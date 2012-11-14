@@ -1,21 +1,23 @@
 # -*- coding: utf-8 -*-
-from flask import render_template, render_template_string
-
 __author__ = 'livelazily'
 
 import logging
 
-from flask.views import View
-from urlparse import urljoin
+from google.appengine.api import mail
+from google.appengine.api.app_identity import get_application_id
+from google.appengine.api.urlfetch import fetch
+from google.appengine.ext import db
 
 from lxml import etree
 from models import ProjectFile
-from google.appengine.ext import db
-from google.appengine.api import mail
-from google.appengine.api.urlfetch import fetch
+
+from flask import render_template, render_template_string
+from flask.views import View
+from urlparse import urljoin
 
 class CheckGoogleCodeProjectUpdate(View):
     def dispatch_request(self):
+
         file_msgs = []
         try:
             query = db.GqlQuery('SELECT * FROM Task')
@@ -64,7 +66,7 @@ class CheckGoogleCodeProjectUpdate(View):
 
     def _sendEmail(self, project_name, file_name, data):
         message = mail.EmailMessage()
-        message.sender = 'livelazily <livelazily@gmail.com>'
+        message.sender = 'task@%s.appspotmail.com' % get_application_id()
         message.to = 'livelazily@gmail.com'
         message.subject = u'%s 有新的版本 %s 可以下载了' % (project_name, file_name)
         message.body = u'''更新内容: %s
