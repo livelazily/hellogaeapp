@@ -11,4 +11,4 @@ class ProjectFile(db.Model):
     desc = db.StringProperty(multiline=True)
 
 class Task(db.Model):
-    pass
+    name = db.StringProperty(required=True)

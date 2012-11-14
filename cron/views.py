@@ -9,7 +9,7 @@ from flask.views import View
 from urlparse import urljoin
 
 from lxml import etree
-from models import ProjectFile, Task
+from models import ProjectFile
 from google.appengine.ext import db
 from google.appengine.api import mail
 from google.appengine.api.urlfetch import fetch
@@ -18,11 +18,11 @@ class CheckGoogleCodeProjectUpdate(View):
     def dispatch_request(self):
         file_msgs = []
         try:
-            query = db.GqlQuery('SELECT __key__ FROM Task')
+            query = db.GqlQuery('SELECT * FROM Task')
             query = query.fetch(10)
 
-            for key in query:
-                project_name = key.name()
+            for task in query:
+                project_name = task.name
                 file_msgs.append(self._checkUpdate(project_name))
             if len(query) < 1:
                 file_msgs.append("Task not found!")
@@ -66,10 +66,9 @@ class CheckGoogleCodeProjectUpdate(View):
         message = mail.EmailMessage()
         message.sender = 'livelazily <livelazily@gmail.com>'
         message.to = 'livelazily@gmail.com'
-        message.subject = u'%s 有新的版本 %s' % (project_name, file_name)
-        message.body = u'''%s 有新的版本 %s 可以下载了
-更新内容: %s
-下载地址为: %s''' % (project_name,file_name, data.get('desc'),data.get('url'))
+        message.subject = u'%s 有新的版本 %s 可以下载了' % (project_name, file_name)
+        message.body = u'''更新内容: %s
+下载地址为: %s''' % (data.get('desc'),data.get('url'))
 
         message.send()
 
@@ -79,7 +78,7 @@ class CheckGoogleCodeProjectUpdate(View):
         file_msg = []
         if file_name:
             data = self._getDetialData(detial_url)
-            query = db.GqlQuery('SELECT * FROM ProjectFile WHERE name = :1 and sha1 = :2', file_name, data.get('sha1'))
+            query = db.GqlQuery('SELECT __key__ FROM ProjectFile WHERE name = :1 and sha1 = :2', file_name, data.get('sha1'))
             old_file = query.get()
             if not old_file:
                 new_file = ProjectFile(name=file_name, **data)
@@ -87,7 +86,7 @@ class CheckGoogleCodeProjectUpdate(View):
                 self._sendEmail(project_name, file_name, data)
                 file_msg.append('new gae file key is %s' % str(key.id_or_name()))
             else:
-                key = old_file.key()
+                key = old_file
                 file_msg.append('old gae file key is %s' % str(key.id_or_name()))
         file_msg.append('<br> %s' % file_name)
         return "".join(file_msg)
