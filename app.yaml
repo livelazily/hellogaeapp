@@ -1,5 +1,5 @@
 application: hellogaeapp
-version: 2
+version: 3
 runtime: python27
 api_version: 1
 threadsafe: no
@@ -11,7 +11,7 @@ handlers:
   script: helloworld.app
 
 - url: /tasks/checkapp
-  script: cron/checkupdate.py
+  script: helloflask.app
   login: admin
 
 - url: /.*
