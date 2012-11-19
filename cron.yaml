@@ -1,4 +1,4 @@
 cron:
 - description: check new app
-  url: /tasks/checkapp
+  url: /tasks/checkapp/
   schedule: every 10 minutes

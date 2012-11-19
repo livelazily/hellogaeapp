@@ -10,7 +10,7 @@ handlers:
 - url: /webapp2
   script: helloworld.app
 
-- url: /tasks/checkapp
+- url: /tasks/checkapp/
   script: helloflask.app
   login: admin
 
