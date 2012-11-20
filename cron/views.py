@@ -31,6 +31,7 @@ class CheckGoogleCodeProjectUpdate(View):
         except Exception, e:
             logging.exception(e)
             return render_template_string('<div>Check update faild!</div>')
+        logging.debug(file_msgs)
         return render_template('taskresult.html', file_msgs=file_msgs)
 
 
