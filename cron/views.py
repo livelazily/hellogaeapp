@@ -2,6 +2,7 @@
 __author__ = 'livelazily'
 
 import logging
+import os
 
 from google.appengine.api import mail
 from google.appengine.api.app_identity import get_application_id
@@ -17,7 +18,6 @@ from urlparse import urljoin
 
 class CheckGoogleCodeProjectUpdate(View):
     def dispatch_request(self):
-
         file_msgs = []
         try:
             query = db.GqlQuery('SELECT * FROM Task')
@@ -33,7 +33,6 @@ class CheckGoogleCodeProjectUpdate(View):
             return render_template_string('<div>Check update faild!</div>')
         logging.debug(file_msgs)
         return render_template('taskresult.html', file_msgs=file_msgs)
-
 
 
     def _getLastFile(self, project_name):
@@ -71,7 +70,7 @@ class CheckGoogleCodeProjectUpdate(View):
         message.to = 'livelazily@gmail.com'
         message.subject = u'%s 有新的版本 %s 可以下载了' % (project_name, file_name)
         message.body = u'''更新内容: %s
-下载地址为: %s''' % (data.get('desc'),data.get('url'))
+下载地址为: %s''' % (data.get('desc'), data.get('url'))
 
         message.send()
 
@@ -81,7 +80,8 @@ class CheckGoogleCodeProjectUpdate(View):
         file_msg = []
         if file_name:
             data = self._getDetialData(detial_url)
-            query = db.GqlQuery('SELECT __key__ FROM ProjectFile WHERE name = :1 and sha1 = :2', file_name, data.get('sha1'))
+            query = db.GqlQuery('SELECT __key__ FROM ProjectFile WHERE name = :1 and sha1 = :2', file_name,
+                                data.get('sha1'))
             old_file = query.get()
             if not old_file:
                 new_file = ProjectFile(name=file_name, **data)
@@ -96,7 +96,6 @@ class CheckGoogleCodeProjectUpdate(View):
 
 
 class ShowTaskList(View):
-
     def get_template_name(self):
         return 'index.html'
 
@@ -106,5 +105,9 @@ class ShowTaskList(View):
     def dispatch_request(self):
         tasks = db.GqlQuery('SELECT * FROM Task')
         tasks = tasks.fetch(10)
-        context = {"tasks": tasks}
+
+        server = os.environ.get("SERVER_SOFTWARE")
+        version = os.environ.get("CURRENT_VERSION_ID")
+        context = {"tasks": tasks, "server": server, "version": version}
+        
         return self.render_template(context)
