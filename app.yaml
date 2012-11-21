@@ -2,7 +2,7 @@ application: hellogaeapp
 version: 3
 runtime: python27
 api_version: 1
-threadsafe: no
+threadsafe: yes
 
 handlers:
 - url: /static
@@ -13,6 +13,10 @@ handlers:
 - url: /tasks/checkapp/
   script: helloflask.app
   login: admin
+
+- url: /robots.txt
+  static_files: robots.txt
+  upload: robots.txt
 
 - url: /.*
   script: helloflask.app
