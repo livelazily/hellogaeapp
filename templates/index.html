@@ -1,15 +1,60 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-1.8.2.js') }}"></script>
+  <title>Tasks</title>
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap/bootstrap.css')}}">
-  <title></title>
+  <style>
+    body {
+      padding-top: 60px;
+    }
+
+    #container {
+      width: 460px;
+    }
+
+    .task-index {
+      width: 10%;
+    }
+
+    .task-name {
+      width: 90%;
+    }
+  </style>
 </head>
 <body>
-<div id="content">
-  <table id="taskTable">
+<div class="navbar navbar-inverse navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="brand" href="/tasks">Tasks</a>
+    </div>
+  </div>
+</div>
+<!-- /navbar -->
 
+<div id="container" class="container">
+  <h2>Check update projects</h2>
+  <table id="taskTable" class="table table-bordered">
+    <thead>
+    <tr>
+      <th>#</th>
+      <th>Project Name</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for task in tasks %}
+    <tr>
+      <td class="task-index">{{ loop.index }}</td>
+      <td class="task-name">{{ task.name }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
   </table>
 </div>
+<!-- /container -->
+<!-- Le javascript
+    ================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script type="text/javascript" src="{{ url_for('static', filename='js/jquery-1.8.2.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
 </body>
 </html>

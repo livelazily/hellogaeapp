@@ -96,12 +96,6 @@ class CheckGoogleCodeProjectUpdate(View):
 
 
 class ShowTaskList(View):
-    def getTaskList(self):
-        """"""
-        query = db.GqlQuery('SELECT __key__ FROM Task')
-        query = query.fetch(10)
-        for key in query:
-            name = key.name()
 
     def get_template_name(self):
         return 'index.html'
@@ -110,5 +104,7 @@ class ShowTaskList(View):
         return render_template(self.get_template_name(), **context)
 
     def dispatch_request(self):
-        context = {"task": "tasks"}
+        tasks = db.GqlQuery('SELECT * FROM Task')
+        tasks = tasks.fetch(10)
+        context = {"tasks": tasks}
         return self.render_template(context)
