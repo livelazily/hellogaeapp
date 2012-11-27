@@ -49,9 +49,10 @@
 			{% for task in tasks %}
 				<tr>
 					<td class="task-index">{{ loop.index }}</td>
-					<td class="task-name"><a
-							href="{{ request.scheme }}://code.google.com/p/{{ task.name }}/downloads/list"
-							target="_blank">{{ task.name }}</a></td>
+					<td class="task-name">
+						<a href="{{ request.scheme }}://code.google.com/p/{{ task.name }}/downloads/list"
+						   target="_blank">{{ task.name }}</a>
+					</td>
 				</tr>
 			{% endfor %}
 			</tbody>
