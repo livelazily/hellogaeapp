@@ -32,7 +32,7 @@ class CheckGoogleCodeProjectUpdate(View):
             logging.exception(e)
             return render_template_string('<div>Check update faild!</div>')
         logging.debug(file_msgs)
-        return render_template('taskresult.html', file_msgs=file_msgs)
+        return render_template('taskresult.jinja2', file_msgs=file_msgs)
 
 
     def _getLastFile(self, project_name):
@@ -97,7 +97,7 @@ class CheckGoogleCodeProjectUpdate(View):
 
 class ShowTaskList(View):
     def get_template_name(self):
-        return 'index.html'
+        return 'index.jinja2'
 
     def render_template(self, context):
         return render_template(self.get_template_name(), **context)
