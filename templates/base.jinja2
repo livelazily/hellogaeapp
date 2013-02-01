@@ -11,7 +11,7 @@
 				  href="{{ url_for('static', filename='lib/bootstrap/css/bootstrap.min.css') }}">
 		{% endif %}
 		<link rel="stylesheet" type="text/css"
-			  href="{{ url_for('static', filename='css/bootstrap/bootstrap-editable.css') }}">
+			  href="{{ url_for('static', filename='lib/bootstrap-editable/css/bootstrap-editable.css') }}">
 	{% endblock head %}
 </head>
 <body>
@@ -24,7 +24,7 @@
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.js"></script>
 		<script type="text/javascript" src="{{ url_for('static', filename='lib/bootstrap/js/bootstrap.js') }}"></script>
 		<script type="text/javascript"
-				src="{{ url_for('static', filename='jlib/bootstrap-editable/js/bootstrap-editable-inline.js') }}"></script>
+				src="{{ url_for('static', filename='lib/bootstrap-editable/js/bootstrap-editable-inline.js') }}"></script>
 	{% else %}
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
 		<script type="text/javascript" src="{{ url_for('static', filename='lib/bootstrap/js/bootstrap.min.js') }}"></script>
