@@ -5,10 +5,10 @@
 		<title>{% block title %}{% endblock %}</title>
 		{% if "Development" in server %}
 			<link rel="stylesheet" type="text/css"
-				  href="{{ url_for('static', filename='css/bootstrap/bootstrap.css') }}">
+				  href="{{ url_for('static', filename='lib/bootstrap/css/bootstrap.css') }}">
 		{% else %}
 			<link rel="stylesheet" type="text/css"
-				  href="{{ url_for('static', filename='css/bootstrap/bootstrap.min.css') }}">
+				  href="{{ url_for('static', filename='lib/bootstrap/css/bootstrap.min.css') }}">
 		{% endif %}
 		<link rel="stylesheet" type="text/css"
 			  href="{{ url_for('static', filename='css/bootstrap/bootstrap-editable.css') }}">
@@ -21,15 +21,15 @@
 	    ================================================== -->
 	<!-- Placed at the end of the document so the pages load faster -->
 	{% if "Development" in server %}
-		<script type="text/javascript" src="{{ url_for('static', filename='js/jquery-1.8.3.js') }}"></script>
-		<script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
+		<script type="text/javascript" src="{{ url_for('static', filename='lib/jquery/jquery-1.8.3.js') }}"></script>
+		<script type="text/javascript" src="{{ url_for('static', filename='lib/bootstrap/js/bootstrap.js') }}"></script>
 		<script type="text/javascript"
-				src="{{ url_for('static', filename='js/bootstrap-editable-inline.js') }}"></script>
+				src="{{ url_for('static', filename='jlib/bootstrap-editable/js/bootstrap-editable-inline.js') }}"></script>
 	{% else %}
-		<script type="text/javascript" src="{{ url_for('static', filename='js/jquery-1.8.3.min.js') }}"></script>
-		<script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+		<script type="text/javascript" src="{{ url_for('static', filename='lib/jquery/jquery-1.8.3.min.js') }}"></script>
+		<script type="text/javascript" src="{{ url_for('static', filename='lib/bootstrap/js/bootstrap.min.js') }}"></script>
 		<script type="text/javascript"
-				src="{{ url_for('static', filename='js/bootstrap-editable-inline.min.js') }}"></script>
+				src="{{ url_for('static', filename='lib/bootstrap-editable/js/bootstrap-editable-inline.min.js') }}"></script>
 	{% endif %}
 {% endblock body %}
 {% block footer %}
